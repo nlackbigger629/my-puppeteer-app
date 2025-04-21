@@ -1,12 +1,13 @@
 {
-  "name": "puppeteer-railway",
+  "name": "linkedin-job-scraper",
   "version": "1.0.0",
-  "description": "Puppeteer script deployed on Railway",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
+    "puppeteer-extra": "^3.3.4",
+    "puppeteer-extra-plugin-stealth": "^2.11.1",
     "puppeteer": "^22.11.0"
   }
 }
