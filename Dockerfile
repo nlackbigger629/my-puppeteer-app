@@ -1,10 +1,8 @@
-# Use the latest Node.js LTS version as the base image
 FROM node:18-slim
 
-# Install necessary dependencies
+# Install Chromium dependencies
 RUN apt-get update && apt-get install -y \
   wget \
-  gnupg \
   ca-certificates \
   fonts-liberation \
   libappindicator3-1 \
@@ -25,24 +23,23 @@ RUN apt-get update && apt-get install -y \
   rm -rf /var/lib/apt/lists/*
 
 # Install Chromium
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
-  apt-get update && \
-  apt-get install -y google-chrome-stable --no-install-recommends && \
-  rm -rf /var/lib/apt/lists/*
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+  dpkg -i google-chrome-stable_current_amd64.deb || true && \
+  apt-get -f install -y && \
+  rm google-chrome-stable_current_amd64.deb
 
-# Set environment variable for Puppeteer to find Chromium
+# Set executable path for puppeteer
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
-# Set working directory
+# Set work directory
 WORKDIR /app
 
-# Copy project files
+# Copy files
 COPY package.json .
 COPY index.js .
 
 # Install dependencies
 RUN npm install
 
-# Start the application
+# Start the app
 CMD ["npm", "start"]
